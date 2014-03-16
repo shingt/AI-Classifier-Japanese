@@ -144,6 +144,8 @@ Only noun, verb and adjective are currently supported.
 
 =head1 METHODS
 
+=over
+
 =item C<< my $classifier = AI::Classifier::Japanese->new(); >>
 
 Create new instance of AI::Classifier::Japanese.
@@ -171,6 +173,8 @@ Restore parameters from a file.
 =item C<< my @labels = $classifier->labels; >>
 
 Get category labels as an array reference.
+
+=back
 
 =head1 LICENSE
 
