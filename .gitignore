@@ -13,6 +13,8 @@ nytprof/
 
 cover_db/
 
+cpanfile.snapshot
+
 *.bak
 *.old
 *~
