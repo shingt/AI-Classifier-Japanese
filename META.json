@@ -1,7 +1,7 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "AI::Classifier::Japanese is a Japanese-text category classifier module using Naive Bayes and MeCab.",
    "author" : [
-      "shin-en <van.s.ver@gmail.com>"
+      "shingt <shingtgt@gmail.com>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "Minilla/v0.11.1, CPAN::Meta::Converter version 2.120921",
