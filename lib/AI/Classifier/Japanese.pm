@@ -116,7 +116,8 @@ __END__
 
 =head1 NAME
 
-AI::Classifier::Japanese
+AI::Classifier::Japanese - the combination wrapper of Algorithm::NaiveBayes and
+Text::MeCab.
 
 =head1 SYNOPSIS
 
