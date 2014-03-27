@@ -26,4 +26,6 @@ cpanfile.snapshot
 
 MYMETA.*
 
+param_dummy.dat
+
 /AI-Classifier-Japanese-*

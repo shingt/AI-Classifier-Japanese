@@ -5,11 +5,15 @@ use warnings;
 
 our $VERSION = "0.01";
 
-use Mouse;
 use Text::MeCab;
 use Algorithm::NaiveBayes;
 
 my $nb = Algorithm::NaiveBayes->new;
+
+sub new {
+    my $class = shift;
+    bless {}, $class;
+}
 
 sub add_training_text {
   my ($self, $text, $category) = @_;
@@ -106,8 +110,6 @@ sub _is_noun {
 sub _is_prenominal_adj {
   return $_[0] == 68;
 }
-
-__PACKAGE__->meta->make_immutable();
 
 1;
 __END__

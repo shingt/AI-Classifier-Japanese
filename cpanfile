@@ -1,6 +1,5 @@
 requires 'perl', '5.008001';
 
-requires 'Mouse';
 requires 'Algorithm::NaiveBayes';
 requires 'Text::MeCab';
 
