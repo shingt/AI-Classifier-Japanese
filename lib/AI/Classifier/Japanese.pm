@@ -8,44 +8,48 @@ our $VERSION = "0.01";
 use Text::MeCab;
 use Algorithm::NaiveBayes;
 
-my $nb = Algorithm::NaiveBayes->new;
-
 sub new {
     my $class = shift;
-    bless {}, $class;
+
+    my $classifier = Algorithm::NaiveBayes->new;
+    bless {
+      classifier => $classifier
+    }, $class;
 }
 
 sub add_training_text {
   my ($self, $text, $category) = @_;
 
-  my $words_freq_ref = &_convert_text_to_bow($text);
-  $nb->add_instance(
+  my $words_freq_ref = $self->_convert_text_to_bow($text);
+  $self->{classifier}->add_instance(
     attributes => $words_freq_ref,
     label      => $category
   );
 }
 
 sub train {
-  $nb->train;
+  my $self = shift;
+  $self->{classifier}->train;
 }
 
 sub labels {
-  $nb->labels;
+  my $self = shift;
+  $self->{classifier}->labels;
 }
 
 sub predict {
   my ($self, $text) = @_;
 
-  my $words_freq_ref = &_convert_text_to_bow($text);
-  my $result_ref = $nb->predict(
+  my $words_freq_ref = $self->_convert_text_to_bow($text);
+  my $result_ref = $self->{classifier}->predict(
     attributes => $words_freq_ref
   );
 }
 
 sub _convert_text_to_bow {
-  my $text = shift;
+  my ($self, $text) = @_;
 
-  my $words_ref = &_parse_text($text);
+  my $words_ref = $self->_parse_text($text);
   my $words_freq_ref = {};
   foreach (@$words_ref) {
     $words_freq_ref->{$_}++;
@@ -54,14 +58,14 @@ sub _convert_text_to_bow {
 }
 
 sub _parse_text {
-  my $text = shift;
+  my ($self, $text) = @_;
 
   my $mecab = Text::MeCab->new();
   my $node = $mecab->parse($text);
   my $words_ref = [];
 
   while ($node) {
-    if (&_is_keyword($node->posid)) {
+    if ($self->_is_keyword($node->posid)) {
       push @$words_ref, $node->surface;
     }
     $node = $node->next;
@@ -71,44 +75,52 @@ sub _parse_text {
 
 sub save_state {
   my ($self, $path) = @_;
-  $nb->save_state($path);
+  $self->{classifier}->save_state($path);
 }
 
 sub restore_state {
   my ($self, $path) = @_;
-  $nb = Algorithm::NaiveBayes->restore_state($path);
+  $self->{classifier} = Algorithm::NaiveBayes->restore_state($path);
 }
 
 sub _is_keyword {
-  my $posid = shift;
+  my ($self, $posid) = @_;
 
-  return &_is_noun($posid) || &_is_verb($posid) || &_is_adj($posid);
+  return $self->_is_noun($posid) || $self->_is_verb($posid) || $self->_is_adj($posid);
 }
 
 # See: http://mecab.googlecode.com/svn/trunk/mecab/doc/posid.html
 sub _is_interjection {
-  return $_[0] == 2;
+  my ($self, $posid) = @_;
+  return $posid == 2;
 }
 sub _is_adj {
-  return 10 <= $_[0] && $_[0] < 13;
+  my ($self, $posid) = @_;
+  return 10 <= $posid && $posid < 13;
 }
 sub _is_aux {
-  return $_[0] == 25;
+  my ($self, $posid) = @_;
+  return $posid == 25;
 }
 sub _is_conjunction {
-  return $_[0] == 26;
+  my ($self, $posid) = @_;
+  return $posid == 26;
 }
 sub _is_particls {
-  return 27 <= $_[0] && $_[0] < 31;
+  my ($self, $posid) = @_;
+  return 27 <= $posid && $posid < 31;
 }
 sub _is_verb {
-  return 31 <= $_[0] && $_[0] < 34;
+  my ($self, $posid) = @_;
+  return 31 <= $posid && $posid < 34;
 }
 sub _is_noun {
-  return 36 <= $_[0] && $_[0] < 68;
+  my ($self, $posid) = @_;
+  return 36 <= $posid && $posid < 68;
 }
 sub _is_prenominal_adj {
-  return $_[0] == 68;
+  my ($self, $posid) = @_;
+  return $posid == 68;
 }
 
 1;
